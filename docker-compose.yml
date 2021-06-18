@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_HOST: mysql
+
+  blog:
+    build: ./
+    command: "rails s -b 0.0.0.0"
+    environment:
+      RAILS_ENV: development
+      MYSQL_USER: root
+      MYSQL_DATABASE : blog_development
+      MYSQL_HOST: dbrw
+
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./:/app
+    depends_on:
+     - mysql
+
+volumes:
+  dbdata:
+    driver: local
